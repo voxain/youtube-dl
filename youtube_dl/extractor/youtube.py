@@ -579,6 +579,22 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
             }
         },
         {
+            'url': 'https://www.youtube.com/watch?v=PA4gbtKWNAI',
+            'note': 'Test video with age protection',
+            'info_dict': {
+                'id': 'PA4gbtKWNAI',
+                'ext': 'mp4',
+                'upload_date': '20201028',
+                'title': 'Big Buck Bunny (TEST) (Age-restricted)',
+                'description': 'An age restricted test video for youtube-dl',
+                'duration': 635,
+                'uploader': 'Ali Sherief',
+                'uploader_id': 'UCi1TsEkfcMaYSadGms3UnqA',
+                'uploader_url': r're:https?://(?:www\.)?youtube\.com/channel/UCi1TsEkfcMaYSadGms3UnqA',
+                'age_limit': 18,
+            }
+        },
+        {
             'url': '//www.YouTube.com/watch?v=yZIXLfi8CZQ',
             'note': 'Embed-only video (#1746)',
             'info_dict': {
@@ -1955,7 +1971,10 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
 
                 if cipher:
                     if 's' in url_data or self._downloader.params.get('youtube_include_dash_manifest', True):
-                        ASSETS_RE = r'"assets":.+?"js":\s*("[^"]+")'
+                        ASSETS_RE = (
+                            r'<script[^>]+\bsrc=("[^"]+")[^>]+\bname=["\']player_ias/base',
+                            r'"jsUrl"\s*:\s*("[^"]+")',
+                            r'"assets":.+?"js":\s*("[^"]+")')
                         jsplayer_url_json = self._search_regex(
                             ASSETS_RE,
                             embed_webpage if age_gate else video_webpage,
